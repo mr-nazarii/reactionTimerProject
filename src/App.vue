@@ -1,47 +1,64 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script>
+import BlockElement from "./components/BlockElement.vue";
+import ResultsComponent from "./components/ResultsComponent.vue";
+export default {
+  data() {
+    return {
+      active: false,
+      delay: null,
+      score: null,
+    };
+  },
+  methods: {
+    start() {
+      this.active = true;
+      this.delay = 2000 + Math.random() * 5000;
+      this.score = null;
+      console.log(this.delay);
+    },
+
+    endGame(reactionTime) {
+      this.score = reactionTime;
+      this.active = false;
+    },
+  },
+  components: { BlockElement, ResultsComponent },
+};
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="wrapper">
+    <h1>Reaction <span>Timer</span></h1>
+  </div>
+  <div class="wrapper">
+    <button @click="start" :disabled="active">Play</button>
+  </div>
+  <BlockElement v-if="active" :delay="delay" @end="endGame" />
+  <ResultsComponent v-if="score !== null" :score="score" />
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
+span {
+  color: hsla(160, 100%, 37%, 1);
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+button {
+  padding: 10px 30px;
+  background-color: hsla(160, 100%, 37%, 1);
+  border: none;
+  border-radius: 20px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+button:disabled {
+  background-color: rgb(132, 182, 165);
 }
 </style>
